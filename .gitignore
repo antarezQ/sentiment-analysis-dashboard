@@ -41,12 +41,13 @@ data/processed/*.parquet
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# Models - file model bisa gede
-models/*.pkl
+# Models - file model gede di-block by default
 models/*.h5
 models/*.pt
 models/*.bin
 !models/.gitkeep
+# Allow specific trained models (untuk deployment)
+!models/*.pkl
 
 # Logs
 *.log
