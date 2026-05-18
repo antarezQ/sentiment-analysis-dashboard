@@ -1,0 +1,6 @@
+{
+  "best_model": "Logistic Regression",
+  "best_accuracy": 0.762311901504788,
+  "models_compared": 4,
+  "total_test_samples": 2924
+}
