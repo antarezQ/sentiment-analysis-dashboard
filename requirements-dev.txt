@@ -1,0 +1,13 @@
+# Notebooks and tests (on top of requirements.txt)
+-r requirements.txt
+numpy>=1.26
+matplotlib>=3.7
+seaborn>=0.12
+wordcloud>=1.9
+vaderSentiment>=3.3.2
+transformers>=4.30   # only for the DistilBERT comparison in notebook 03
+torch>=2.0
+tqdm>=4.65
+jupyter>=1.0
+ipykernel>=6.25
+pytest>=7.4

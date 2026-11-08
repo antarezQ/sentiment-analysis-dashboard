@@ -28,7 +28,7 @@ Twitter is where airline customers complain in public. A Customer Experience / S
 4. **Benchmark against Virgin America**, whose share of positive tweets (30.2%) is over 3× that of US Airways (9.2%).
 5. **Monitor sentiment automatically.** The classification model in this project flags negative tweets so the social care team does not have to read every tweet manually.
 
-> **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and some tweets labeled "Delta" mention @JetBlue. Full details are in [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
+> **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and American Airlines tweets were only collected from 22 Feb. 99.8% of tweets labeled "Delta" in the source are addressed to @JetBlue, so the dashboard relabels them as JetBlue. Full details are in [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
 
 ## 🛠️ Tech Stack
 
@@ -80,10 +80,14 @@ source venv/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### 4. Run dashboard
+### 4. Build the dashboard data and run the dashboard
+Put `Tweets.csv` in `data/raw/` first (see Dataset below).
 ```bash
+python scripts/build_dashboard_data.py
 streamlit run app/streamlit_app.py
 ```
+
+To rerun the notebooks and tests, install `requirements-dev.txt` instead and run `pytest`.
 
 ## 📊 Dataset
 
