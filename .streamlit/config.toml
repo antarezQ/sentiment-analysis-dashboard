@@ -1,0 +1,3 @@
+[theme]
+# Blue accent so filter chips are not mistaken for the red "negative" series.
+primaryColor = "#2a78d6"

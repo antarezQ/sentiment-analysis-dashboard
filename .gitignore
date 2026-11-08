@@ -40,6 +40,8 @@ data/processed/*.csv
 data/processed/*.parquet
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+# Slim table (no user names or locations) that the deployed dashboard reads (see scripts/build_dashboard_data.py)
+!data/processed/dashboard_data.csv
 
 # Models - file model gede di-block by default
 models/*.h5
