@@ -1,12 +1,34 @@
 # Sentiment Analysis Dashboard
 
-End-to-end sentiment analysis project with interactive Streamlit dashboard. Analyzes social media / review text data, classifies sentiment (positive / negative / neutral), and visualizes insights.
+Analysis of 14,640 tweets about six US airlines to find out **which airlines customers complain about most, why they complain, and what airlines should fix first**.
 
-## 🎯 Project Goals
+## 🎯 Business Problem
 
-- Build a reproducible NLP pipeline for sentiment classification
-- Deploy an interactive dashboard for non-technical users to explore results
-- Demonstrate end-to-end ML workflow: data → model → deployment
+Twitter is where airline customers complain in public. A Customer Experience / Social Care team has limited people, so it needs to know where to focus. This project answers four questions:
+
+1. How negative is public conversation about airlines?
+2. Which airlines have the worst and best reputation on Twitter?
+3. What drives customer complaints: operations (delays, cancellations) or customer service?
+4. What should the Customer Experience team prioritize?
+
+## 📌 Key Insights
+
+| # | Insight |
+|---|---|
+| 1 | **62.7%** of tweets are negative and only 16.1% are positive. Customers use Twitter mainly to complain. |
+| 2 | **US Airways** has the worst reputation (**77.7%** negative), followed by American (71.0%) and United (68.9%). **Virgin America** has the best (35.9% negative). |
+| 3 | United, US Airways and American account for ~65% of tweet volume but **~75% of all negative tweets**. |
+| 4 | **Customer service** is the #1 complaint driver (**31.7%** of negative tweets), bigger than late and cancelled flights combined (27.4%). |
+
+## 💡 Recommendations
+
+1. **Fix customer service before punctuality.** It is the biggest complaint driver and the one airlines control most directly (staff training, response time, empowering agents to resolve issues).
+2. **Focus social care resources on United, US Airways and American**, which together generate ~75% of negative tweets.
+3. **Notify passengers proactively about delays and cancellations**, with automatic rebooking options, so operational problems do not escalate into service complaints.
+4. **Benchmark against Virgin America**, whose share of positive tweets (30.2%) is over 3× that of US Airways (9.2%).
+5. **Monitor sentiment automatically.** The classification model in this project flags negative tweets so the social care team does not have to read every tweet manually.
+
+> **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and some tweets labeled "Delta" mention @JetBlue. Full details are in [`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb).
 
 ## 🛠️ Tech Stack
 
@@ -65,7 +87,7 @@ streamlit run app/streamlit_app.py
 
 ## 📊 Dataset
 
-[TBD — isi nanti pas udah pilih dataset]
+[Twitter US Airline Sentiment](https://www.kaggle.com/datasets/crowdflower/twitter-airline-sentiment) (Kaggle / CrowdFlower): 14,640 tweets from February 2015, each labeled positive, neutral or negative by human annotators, with a complaint reason for negative tweets. Download `Tweets.csv` and place it in `data/raw/` (the dataset is not committed to this repo).
 
 ## 📈 Results
 
