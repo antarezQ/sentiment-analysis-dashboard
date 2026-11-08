@@ -19,6 +19,26 @@ from src.data import DASHBOARD_PATH, SENTIMENTS, load_dashboard_data  # noqa: E4
 
 st.set_page_config(page_title="Airline Sentiment Dashboard", page_icon="✈️", layout="wide")
 
+# Streamlit cuts long metric values with "…" on narrow screens. Let KPI text
+# wrap and shrink with the window instead, so "Customer Service Issue" stays readable.
+st.markdown(
+    """
+    <style>
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] *,
+    [data-testid="stMetricLabel"], [data-testid="stMetricLabel"] * {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+    [data-testid="stMetricValue"] {
+        font-size: clamp(1.3rem, 2.6vw, 2.25rem);
+        line-height: 1.15;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # Sentiment is a polarity, so it uses a diverging pair: red / gray / blue.
 SENTIMENT_COLORS = {"negative": "#e34948", "neutral": "#a8a79f", "positive": "#2a78d6"}
 # Each airline keeps the same color in every chart, whatever the filter.
