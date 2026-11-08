@@ -1,5 +1,7 @@
 # Sentiment Analysis Dashboard
 
+**🔗 Live dashboard: [airline-sentiment-antarez.streamlit.app](https://airline-sentiment-antarez.streamlit.app)**
+
 Analysis of 14,640 tweets about six US airlines to find out **which airlines customers complain about most, why they complain, and what airlines should fix first**.
 
 ## 🎯 Business Problem
@@ -64,7 +66,7 @@ sentiment-analysis-dashboard/
 
 ### 1. Clone repo
 ```bash
-git clone https://github.com/USERNAME/sentiment-analysis-dashboard.git
+git clone https://github.com/antarezQ/sentiment-analysis-dashboard.git
 cd sentiment-analysis-dashboard
 ```
 
