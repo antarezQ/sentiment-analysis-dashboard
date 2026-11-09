@@ -84,16 +84,17 @@ Run any query from the project root with `python scripts/run_sql.py sql/<file>.s
 1. **Data cleaning** ([`src/data.py`](src/data.py))
    - Found and removed 155 duplicate tweets, keeping the label with the highest annotator confidence.
    - Found that 99.8% of tweets labeled "Delta" in the source are addressed to @JetBlue, so they are relabeled as JetBlue.
+   - Found that the source had replaced every *cancel*, *late* and *booking* in the tweet text with a complaint label ("Cancelled Flightled"), and restored the original words.
    - Converted timestamps to US Pacific time and fixed HTML entities in the text.
 2. **Exploratory analysis** ([`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb)): sentiment by airline, complaint reasons, tweet length and timing, answered against the four business questions.
-3. **Sentiment classification** (notebooks [`02`](notebooks/02_preprocessing.ipynb)–[`04`](notebooks/04_evaluation.ipynb)): compared four approaches on 2,924 held-out tweets.
+3. **Sentiment classification** (notebooks [`02`](notebooks/02_preprocessing.ipynb)–[`04`](notebooks/04_evaluation.ipynb)): compared four approaches on 2,893 held-out tweets. Duplicates are removed before the train-test split, so the same tweet cannot appear in both sets, and contractions are expanded (*didn't* → *did not*) so negations survive stopword removal.
 
    | Model | Accuracy | F1 negative | F1 neutral | F1 positive |
    |---|---|---|---|---|
-   | **Logistic Regression (TF-IDF)** | **76.2%** | 0.84 | 0.60 | 0.72 |
-   | Naive Bayes (TF-IDF) | 74.9% | 0.84 | 0.42 | 0.58 |
-   | DistilBERT (pre-trained, no fine-tuning) | 69.2% | 0.83 | 0.07 | 0.60 |
-   | VADER (rule-based) | 54.7% | 0.65 | 0.40 | 0.49 |
+   | **Logistic Regression (TF-IDF)** | **77.7%** | 0.85 | 0.61 | 0.73 |
+   | Naive Bayes (TF-IDF) | 74.7% | 0.84 | 0.39 | 0.60 |
+   | DistilBERT (pre-trained, no fine-tuning) | 70.9% | 0.84 | 0.07 | 0.65 |
+   | VADER (rule-based) | 55.4% | 0.65 | 0.42 | 0.50 |
 
    Logistic Regression is the most accurate, fast and explainable, so it powers the dashboard's model tab.
 4. **SQL analysis** ([`sql/`](sql/), [`notebooks/05_sql_analysis.ipynb`](notebooks/05_sql_analysis.ipynb)): six DuckDB queries using CTEs and window functions, tested against the dashboard numbers.

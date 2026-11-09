@@ -283,7 +283,7 @@ with tab_tweets:
 with tab_model:
     st.markdown(
         "A Logistic Regression model trained on these tweets can tag new tweets automatically, so a "
-        "social care team only reads the ones that need action. It is right about **76%** of the time "
+        "social care team only reads the ones that need action. It is right about **78%** of the time "
         "on held-out tweets; neutral tweets are the hardest to tell apart."
     )
     text = st.text_area(
