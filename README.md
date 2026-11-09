@@ -99,7 +99,7 @@ Run any query from the project root with `python scripts/run_sql.py sql/<file>.s
 4. **SQL analysis** ([`sql/`](sql/), [`notebooks/05_sql_analysis.ipynb`](notebooks/05_sql_analysis.ipynb)): six DuckDB queries using CTEs and window functions, tested against the dashboard numbers.
 5. **Dashboard** ([`app/streamlit_app.py`](app/streamlit_app.py)): the chart metrics live in [`src/metrics.py`](src/metrics.py) and are covered by unit tests in [`tests/`](tests/).
 
-> **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and American Airlines tweets were only collected from 22 Feb. 13% of complaints are labeled "Can't Tell", so the reason shares describe the complaints that annotators could classify.
+> **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and nearly all American Airlines tweets (2,600 of 2,604) are from 22 Feb onward. 13% of complaints are labeled "Can't Tell", so the reason shares describe the complaints that annotators could classify.
 
 ## 🛠️ Tech Stack
 

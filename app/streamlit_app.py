@@ -227,7 +227,7 @@ with tab_time:
     st.plotly_chart(style(fig), width="stretch", theme="streamlit")
     st.caption(
         "Only days with at least 30 tweets for an airline are shown. The source data has gaps: "
-        "American Airlines tweets were only collected from 22 Feb, and 16 and 24 Feb are partial days."
+        "nearly all American Airlines tweets are from 22 Feb onward, and 16 and 24 Feb are partial days."
     )
 
     st.subheader("When do people tweet? (hour of day, US Pacific)")
