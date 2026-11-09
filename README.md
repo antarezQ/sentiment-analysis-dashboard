@@ -100,6 +100,8 @@ Run any query from the project root with `python scripts/run_sql.py sql/<file>.s
    | VADER (rule-based) | 55.4% | 0.65 | 0.42 | 0.50 |
 
    Logistic Regression is the most accurate single model, fast and explainable, so it powers the dashboard's model tab. A majority vote of the models scored about 2 points higher on the test set; confirming that with cross-validation is a possible next step.
+
+   **Does it work outside airlines?** Scored without retraining on 27,408 everyday tweets from a second labeled dataset, the model reaches only **54.9%** accuracy (vs 77.7%). It knows 69% of the words in everyday tweets against 88% in airline tweets, and misses half of the negative ones, which are about feelings (*bored, hurts, lonely*) rather than delays and lost bags. The model is fit for airline social care; another domain would need its own labeled data.
 5. **Dashboard** ([`app/streamlit_app.py`](app/streamlit_app.py)): the chart metrics live in [`src/metrics.py`](src/metrics.py) and are covered by unit tests in [`tests/`](tests/).
 
 > **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and nearly all American Airlines tweets (2,600 of 2,604) are from 22 Feb onward. 13% of complaints are labeled "Can't Tell", so the reason shares describe the complaints that annotators could classify.
@@ -158,6 +160,8 @@ The cleaned dashboard data is already in the repo. To rebuild it from the raw da
 ## 📂 Dataset
 
 [Twitter US Airline Sentiment](https://www.kaggle.com/datasets/crowdflower/twitter-airline-sentiment) (Kaggle / CrowdFlower, CC BY-NC-SA 4.0): 14,640 tweets from February 2015, each labeled positive, neutral or negative by human annotators, with a complaint reason for negative tweets. The raw file is not committed to this repo.
+
+For the out-of-domain test only: [Twitter Tweets Sentiment Dataset](https://www.kaggle.com/datasets/yasserh/twitter-tweets-sentiment-dataset) (27,481 everyday tweets labeled negative, neutral or positive, from Kaggle's *Tweet Sentiment Extraction* competition), saved as `data/raw/TweetsSentimentDataset.csv`. It is not used for training and not committed.
 
 ## 👤 Author
 
