@@ -1,7 +1,8 @@
-"""Classify new tweets with the Logistic Regression model from notebook 03.
+"""Text cleaning and sentiment prediction with the Logistic Regression model.
 
-The text pipeline mirrors notebook 02 so the model sees input in the
-same shape it was trained on.
+Notebook 02 imports `clean_text` and `to_tokens` from here to prepare the
+training data, so the dashboard cleans new tweets exactly like the model
+was trained.
 """
 
 from __future__ import annotations
@@ -13,19 +14,27 @@ from functools import lru_cache
 from src.data import ROOT
 
 MODELS_DIR = ROOT / "models"
-NEGATION_WORDS = {"not", "no", "nor", "neither", "never", "n't", "nothing", "nobody"}
+NEGATION_WORDS = {"not", "no", "nor", "neither", "never", "nothing", "nobody"}
 
 
 def clean_text(text: str) -> str:
-    """Same cleaning steps as notebook 02 (`clean_text`)."""
+    """Clean a tweet for the models (used by notebook 02 and the dashboard).
+
+    Contractions are expanded first ("didn't" -> "did not"). Otherwise the
+    apostrophe is stripped, "didn" ends up as a separate token, and NLTK's
+    stopword list removes it, so the negation would be lost.
+    """
     if not isinstance(text, str):
         return ""
-    text = text.lower()
+    text = text.lower().replace("’", "'")
     text = re.sub(r"http\S+|www\S+|https\S+", "", text)
     text = re.sub(r"@\w+", "", text)
     text = re.sub(r"#", "", text)
-    text = text.replace("&amp;", "and").replace("&lt;", "")
-    text = text.replace("&gt;", "").replace("&quot;", "")
+    text = text.replace("&amp;", "&").replace("&lt;", "").replace("&gt;", "").replace("&quot;", "")
+    text = text.replace("&", " and ")
+    text = re.sub(r"\bcan't\b", "can not", text)
+    text = re.sub(r"\bwon't\b", "will not", text)
+    text = re.sub(r"n't\b", " not", text)
     text = re.sub(r"[^a-z\s]", " ", text)
     return re.sub(r"\s+", " ", text).strip()
 
@@ -47,9 +56,9 @@ def _stop_words() -> frozenset[str]:
 
 
 def to_tokens(text: str) -> str:
-    """Stopword removal from notebook 02. After `clean_text` the text holds
-    only letters and single spaces, so splitting on spaces gives the same
-    tokens as NLTK's `word_tokenize`."""
+    """Clean the text and drop stopwords (negations are kept). This is the
+    input of the TF-IDF models. After `clean_text` the text holds only letters
+    and single spaces, so splitting on spaces is enough to tokenize."""
     stop = _stop_words()
     return " ".join(t for t in clean_text(text).split() if t not in stop and len(t) > 1)
 

@@ -3,7 +3,7 @@ import pytest
 
 from src import metrics
 from src.data import DASHBOARD_COLUMNS, build_dashboard_data, restore_text
-from src.predict import clean_text, predict
+from src.predict import clean_text, predict, to_tokens
 
 
 @pytest.fixture
@@ -109,6 +109,13 @@ def test_kpis(prepared):
 
 def test_clean_text_matches_notebook_pipeline():
     assert clean_text("@VirginAmerica WHAT a flight!!! http://t.co/x #late &amp; :(") == "what a flight late and"
+
+
+def test_negations_survive_cleaning_and_stopwords():
+    assert clean_text("I didn't get my bag & can't reach you, won’t fly") == (
+        "i did not get my bag and can not reach you will not fly"
+    )
+    assert to_tokens("The crew wasn't helpful").split() == ["crew", "not", "helpful"]
 
 
 def test_model_predicts_obvious_cases():
