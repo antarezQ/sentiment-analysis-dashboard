@@ -11,3 +11,4 @@ tqdm>=4.65
 jupyter>=1.0
 ipykernel>=6.25
 pytest>=7.4
+duckdb>=1.1          # SQL analysis in sql/ and notebook 05 (not used by the dashboard)
