@@ -4,18 +4,42 @@ Run from the project root:
     streamlit run app/streamlit_app.py
 """
 
+import importlib
 import sys
 from pathlib import Path
+from types import ModuleType
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 import pandas as pd  # noqa: E402
 import plotly.express as px  # noqa: E402
 import plotly.graph_objects as go  # noqa: E402
 import streamlit as st  # noqa: E402
 
-from src import metrics  # noqa: E402
-from src.data import DASHBOARD_PATH, SENTIMENTS, load_dashboard_data  # noqa: E402
+
+def fresh_import(name: str, *also_watch: Path) -> ModuleType:
+    """Import a module from src/, reloading it when its source has changed.
+
+    Streamlit only reloads changed modules inside the app/ folder. After a git
+    push, Streamlit Cloud reruns the new app code in the same Python process,
+    so modules from src/ would stay at their old version (for example an
+    AttributeError for a function added to src/metrics.py). This helper lives
+    here, not in src/, so it is never stale itself.
+    """
+    module = importlib.import_module(name)
+    files = [Path(module.__file__), *also_watch]
+    stamp = max(f.stat().st_mtime_ns for f in files if f.exists())
+    if module.__dict__.get("_source_stamp") != stamp:
+        module = importlib.reload(module)
+        module._source_stamp = stamp
+    return module
+
+
+data_module = fresh_import("src.data")  # metrics imports from data, so reload it first
+metrics = fresh_import("src.metrics")
+DASHBOARD_PATH = data_module.DASHBOARD_PATH
+SENTIMENTS = data_module.SENTIMENTS
 
 st.set_page_config(page_title="Airline Sentiment Dashboard", page_icon="✈️", layout="wide")
 
@@ -65,8 +89,10 @@ def style(fig: go.Figure, height: int = 380) -> go.Figure:
 
 
 @st.cache_data
-def get_data() -> pd.DataFrame:
-    return load_dashboard_data()
+def get_data(file_stamp: int) -> pd.DataFrame:
+    # file_stamp is part of the cache key, so a new dashboard_data.csv is
+    # picked up after a deploy instead of serving the cached old version.
+    return data_module.load_dashboard_data()
 
 
 if not DASHBOARD_PATH.exists():
@@ -76,7 +102,7 @@ if not DASHBOARD_PATH.exists():
     )
     st.stop()
 
-data = get_data()
+data = get_data(DASHBOARD_PATH.stat().st_mtime_ns)
 
 # ---------------------------------------------------------------- sidebar
 st.sidebar.header("Filters")
@@ -298,9 +324,12 @@ with tab_model:
         value="@united my flight was delayed 3 hours and nobody at the gate could tell us anything",
     )
     if text.strip():
-        from src.predict import predict
-
-        label, scores = predict(text)
+        # Also watch the model files: a retrained model must not be served
+        # from the old in-memory cache in src.predict.
+        predict_module = fresh_import(
+            "src.predict", ROOT / "models" / "logistic_regression.pkl", ROOT / "models" / "tfidf_vectorizer.pkl"
+        )
+        label, scores = predict_module.predict(text)
         st.markdown(f"Predicted sentiment: **{label}** ({scores[label]:.0%} confidence)")
         probs = pd.DataFrame({"sentiment": SENTIMENTS, "probability": [scores[s] * 100 for s in SENTIMENTS]})
         fig = px.bar(
