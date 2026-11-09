@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from src import metrics
-from src.data import DASHBOARD_COLUMNS, build_dashboard_data
+from src.data import DASHBOARD_COLUMNS, build_dashboard_data, restore_text
 from src.predict import clean_text, predict
 
 
@@ -67,6 +67,19 @@ def test_build_cleans_reasons_text_and_time(raw):
     assert pd.isna(df.loc[4, "negative_reason"])  # reason dropped for non-negative tweet
     assert df.loc[1, "text"] == "@united late & rude"
     assert df.loc[2, "tweet_created"].hour == 23  # stays in Pacific time
+
+
+@pytest.mark.parametrize(
+    "source, restored",
+    [
+        ("@united flight Cancelled Flightled again", "@united flight cancelled again"),
+        ("Cancelled Flightlations and reFlight Booking Problems", "cancellations and rebooking"),
+        ("my Late Flight flight, see you Late Flightr", "my late flight, see you later"),
+        ("cheese pLate Flights and chocoLate Flight", "cheese plates and chocolate"),
+    ],
+)
+def test_restore_text_undoes_label_replacement(source, restored):
+    assert restore_text(pd.Series([source])).iloc[0] == restored
 
 
 def test_sentiment_share_rows_sum_to_100_and_worst_first(prepared):

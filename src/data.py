@@ -29,6 +29,25 @@ REASON_LABELS = {
     "longlines": "Long Lines",
 }
 
+# The source text went through a find-and-replace that swapped every "booking",
+# "cancel" and "late" (any case, even inside words) for a complaint label, so it
+# contains "Cancelled Flightled", "reFlight Booking Problems", "chocoLate Flight".
+# No tweet contains the original words, so reversing the swap restores the text:
+# "Cancelled Flightled" -> "cancelled", "reFlight Booking Problems" -> "rebooking".
+TEXT_FIXES = {
+    "Flight Booking Problems": "booking",
+    "Cancelled Flight": "cancel",
+    "Late Flight": "late",
+}
+
+
+def restore_text(text: pd.Series) -> pd.Series:
+    """Decode HTML ampersands and undo the label find-and-replace in the source."""
+    text = text.str.replace("&amp;", "&", regex=False)
+    for label, word in TEXT_FIXES.items():
+        text = text.str.replace(label, word, regex=False)
+    return text
+
 
 def build_dashboard_data(raw: pd.DataFrame) -> pd.DataFrame:
     """Turn the raw Kaggle `Tweets.csv` into the slim dashboard table."""
@@ -57,7 +76,7 @@ def build_dashboard_data(raw: pd.DataFrame) -> pd.DataFrame:
     created = pd.to_datetime(df["tweet_created"], utc=True)
     df["tweet_created"] = created.dt.tz_convert("US/Pacific").dt.tz_localize(None)
 
-    df["text"] = df["text"].str.replace("&amp;", "&", regex=False)
+    df["text"] = restore_text(df["text"])
     return df[DASHBOARD_COLUMNS].sort_values("tweet_created").reset_index(drop=True)
 
 
