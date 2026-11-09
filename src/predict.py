@@ -1,6 +1,6 @@
 """Text cleaning and sentiment prediction with the Logistic Regression model.
 
-Notebook 02 imports `clean_text` and `to_tokens` from here to prepare the
+Notebook 03 imports `clean_text` and `to_tokens` from here to prepare the
 training data, so the dashboard cleans new tweets exactly like the model
 was trained.
 """
@@ -18,7 +18,7 @@ NEGATION_WORDS = {"not", "no", "nor", "neither", "never", "nothing", "nobody"}
 
 
 def clean_text(text: str) -> str:
-    """Clean a tweet for the models (used by notebook 02 and the dashboard).
+    """Clean a tweet for the models (used by notebook 03 and the dashboard).
 
     Contractions are expanded first ("didn't" -> "did not"). Otherwise the
     apostrophe is stripped, "didn" ends up as a separate token, and NLTK's
