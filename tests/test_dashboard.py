@@ -101,6 +101,12 @@ def test_daily_share_drops_thin_days(prepared):
     assert metrics.daily_negative_share(prepared, min_tweets=3).empty
 
 
+def test_negative_share_by_daypart(prepared):
+    # Fixture hours: 11 (negative), 23 (negative), 8 (positive), 9 (neutral)
+    share = metrics.negative_share_by_daypart(prepared)
+    assert share.to_dict() == {"morning (06-11)": pytest.approx(100 / 3), "evening (18-23)": 100.0}
+
+
 def test_kpis(prepared):
     k = metrics.kpis(prepared)
     assert k["tweets"] == 4

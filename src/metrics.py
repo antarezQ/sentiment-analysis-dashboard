@@ -56,6 +56,17 @@ def daily_negative_share(df: pd.DataFrame, min_tweets: int = 30) -> pd.DataFrame
     return out[out["tweets"] >= min_tweets].reset_index(drop=True)
 
 
+DAYPARTS = {"night (00-05)": range(0, 6), "morning (06-11)": range(6, 12),
+            "afternoon (12-17)": range(12, 18), "evening (18-23)": range(18, 24)}
+
+
+def negative_share_by_daypart(df: pd.DataFrame) -> pd.Series:
+    """Percent of negative tweets in each part of the day (Pacific time)."""
+    part = df["hour"].map({h: name for name, hours in DAYPARTS.items() for h in hours})
+    share = df["sentiment"].eq("negative").groupby(part).mean() * 100
+    return share.reindex(list(DAYPARTS)).dropna()
+
+
 def hourly_volume(df: pd.DataFrame) -> pd.DataFrame:
     """Tweet count per hour of day (Pacific time) and sentiment."""
     out = df.groupby(["hour", "sentiment"]).size().rename("tweets").reset_index()

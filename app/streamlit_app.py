@@ -231,6 +231,13 @@ with tab_time:
     )
 
     st.subheader("When do people tweet? (hour of day, US Pacific)")
+    dayparts = metrics.negative_share_by_daypart(df)
+    if len(dayparts) > 1:
+        st.markdown(
+            f"Most tweets arrive during the day, but the **{dayparts.idxmax()}** is the most negative: "
+            f"**{dayparts.max():.1f}%** of tweets are negative, versus **{dayparts.min():.1f}%** in the "
+            f"**{dayparts.idxmin()}**."
+        )
     hourly = metrics.hourly_volume(df)
     fig = px.bar(
         hourly,
