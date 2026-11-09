@@ -160,4 +160,4 @@ The cleaned dashboard data is already in the repo. To rebuild it from the raw da
 
 ## 👤 Author
 
-**Muhammad Antarez Qhadafi** · [GitHub](https://github.com/antarezQ)
+**Muhammad Antarez Qhadafi** · [LinkedIn](https://www.linkedin.com/in/antarezq/) · [GitHub](https://github.com/antarezQ)
