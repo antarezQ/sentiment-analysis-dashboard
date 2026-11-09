@@ -23,6 +23,7 @@ Twitter is where airline customers complain in public. A Customer Experience / S
 | 2 | **US Airways** has the worst reputation (**77.7%** negative), followed by American (71.6%) and United (68.9%). **Virgin America** has the best (35.9% negative). |
 | 3 | United, US Airways and American produce 64% of tweet volume but **74% of all negative tweets**. |
 | 4 | **Customer service** is the #1 complaint driver (**31.7%** of negative tweets), bigger than late and cancelled flights combined (27.3%). |
+| 5 | **Cancellations drive the spikes.** On the weekend of 21–22 Feb, **70.0%** of tweets were negative (56.6% on other days) as cancellation complaints jumped from 6.9% to 11.2%. **Evenings are the most negative** time of day (67.8% after 18:00). |
 
 ## 💡 Recommendations
 
@@ -31,6 +32,7 @@ Twitter is where airline customers complain in public. A Customer Experience / S
 3. **Notify passengers proactively about delays and cancellations**, with automatic rebooking options, so operational problems do not escalate into service complaints.
 4. **Benchmark against Virgin America**, whose share of positive tweets (30.2%) is over 3× that of US Airways (9.2%).
 5. **Monitor sentiment automatically.** The classification model in this project flags negative tweets so the social care team does not have to read every tweet manually.
+6. **Staff social care for disruptions and evenings.** Add capacity on days with mass cancellations and keep coverage into the evening. Answer vague complaints ("worst airline ever") by asking for details in a private message.
 
 ## 📊 Dashboard
 
