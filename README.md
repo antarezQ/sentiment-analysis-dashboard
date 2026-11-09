@@ -50,7 +50,7 @@ The [live dashboard](https://airline-sentiment-antarez.streamlit.app) lets you f
 
 ## 🗄️ SQL Analysis
 
-The business questions are also answered in SQL ([DuckDB](https://duckdb.org)), one query per question in [`sql/`](sql/), with results and findings in [`notebooks/05_sql_analysis.ipynb`](notebooks/05_sql_analysis.ipynb). What SQL added on top of the dashboard:
+The business questions are also answered in SQL ([DuckDB](https://duckdb.org)), one query per question in [`sql/`](sql/), with results and findings in [`notebooks/02_sql_analysis.ipynb`](notebooks/02_sql_analysis.ipynb). What SQL added on top of the dashboard:
 
 - **Customer service at just two airlines, US Airways and American, accounts for 19.7% of all actionable complaints.** Customer Service Issue is the #1 complaint at 5 of 6 airlines; only JetBlue's #1 is late flights (35.0% of its complaints, 1.67× the rate at other airlines).
 - **Negativity peaked on the weekend of 21–22 Feb.** 22 Feb was the worst day of the week for United (75.7% negative), US Airways (86.6%), JetBlue (62.5%) and Virgin America (50.9%), and Southwest peaked on 21 Feb (69.5%).
@@ -87,17 +87,17 @@ Run any query from the project root with `python scripts/run_sql.py sql/<file>.s
    - Found that the source had replaced every *cancel*, *late* and *booking* in the tweet text with a complaint label ("Cancelled Flightled"), and restored the original words.
    - Converted timestamps to US Pacific time and fixed HTML entities in the text.
 2. **Exploratory analysis** ([`notebooks/01_eda.ipynb`](notebooks/01_eda.ipynb)): sentiment by airline, complaint reasons, tweet length and timing, answered against the four business questions.
-3. **Sentiment classification** (notebooks [`02`](notebooks/02_preprocessing.ipynb)–[`04`](notebooks/04_evaluation.ipynb)): compared four approaches on 2,893 held-out tweets. Duplicates are removed before the train-test split, so the same tweet cannot appear in both sets, and contractions are expanded (*didn't* → *did not*) so negations survive stopword removal.
+3. **SQL analysis** ([`sql/`](sql/), [`notebooks/02_sql_analysis.ipynb`](notebooks/02_sql_analysis.ipynb)): six DuckDB queries using CTEs and window functions, tested against the dashboard numbers.
+4. **Sentiment classification** ([`notebooks/03_sentiment_model.ipynb`](notebooks/03_sentiment_model.ipynb)): compared four approaches on 2,893 held-out tweets. Duplicates are removed before the train-test split, so the same tweet cannot appear in both sets, and contractions are expanded (*didn't* → *did not*) so negations survive stopword removal.
 
    | Model | Accuracy | F1 negative | F1 neutral | F1 positive |
    |---|---|---|---|---|
    | **Logistic Regression (TF-IDF)** | **77.7%** | 0.85 | 0.61 | 0.73 |
    | Naive Bayes (TF-IDF) | 74.7% | 0.84 | 0.39 | 0.60 |
-   | DistilBERT (pre-trained, no fine-tuning) | 70.9% | 0.84 | 0.07 | 0.65 |
+   | DistilBERT (pre-trained, no fine-tuning) | 70.9% | 0.84 | 0.06 | 0.65 |
    | VADER (rule-based) | 55.4% | 0.65 | 0.42 | 0.50 |
 
-   Logistic Regression is the most accurate, fast and explainable, so it powers the dashboard's model tab.
-4. **SQL analysis** ([`sql/`](sql/), [`notebooks/05_sql_analysis.ipynb`](notebooks/05_sql_analysis.ipynb)): six DuckDB queries using CTEs and window functions, tested against the dashboard numbers.
+   Logistic Regression is the most accurate single model, fast and explainable, so it powers the dashboard's model tab. A majority vote of the models scored about 2 points higher on the test set; confirming that with cross-validation is a possible next step.
 5. **Dashboard** ([`app/streamlit_app.py`](app/streamlit_app.py)): the chart metrics live in [`src/metrics.py`](src/metrics.py) and are covered by unit tests in [`tests/`](tests/).
 
 > **Limitations:** the data covers about one week in February 2015, Twitter users skew toward customers who had a problem, and nearly all American Airlines tweets (2,600 of 2,604) are from 22 Feb onward. 13% of complaints are labeled "Can't Tell", so the reason shares describe the complaints that annotators could classify.
@@ -117,15 +117,13 @@ sentiment-analysis-dashboard/
 ├── app/streamlit_app.py           # Streamlit dashboard
 ├── data/
 │   ├── raw/                       # Tweets.csv goes here (not committed)
-│   └── processed/                 # Cleaned dashboard data and model results
+│   └── processed/                 # Cleaned dashboard data
 ├── docs/images/                   # README screenshots
-├── models/                        # Trained TF-IDF vectorizer and classifiers
+├── models/                        # TF-IDF vectorizer and Logistic Regression used by the dashboard
 ├── notebooks/
 │   ├── 01_eda.ipynb               # Business questions, EDA and insights
-│   ├── 02_preprocessing.ipynb     # Text cleaning
-│   ├── 03_modeling.ipynb          # VADER, Naive Bayes, Logistic Regression, DistilBERT
-│   ├── 04_evaluation.ipynb        # Model comparison
-│   └── 05_sql_analysis.ipynb      # Business questions answered in SQL
+│   ├── 02_sql_analysis.ipynb      # Business questions answered in SQL
+│   └── 03_sentiment_model.ipynb   # VADER, Naive Bayes, Logistic Regression, DistilBERT compared
 ├── scripts/
 │   ├── build_dashboard_data.py    # Raw CSV → cleaned dashboard data
 │   └── run_sql.py                 # Run a query from sql/ and print the result
